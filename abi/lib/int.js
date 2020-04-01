@@ -89,12 +89,14 @@ function decode (bits, buf, offset) {
 
   // handle negative
   if (num.charCodeAt(2) > 55) {
-    num = '0x' + num.substring(num.length - bits / 4)
-    return BigInt(num) - mod
+    var underBits = num.substring(num.length - bits / 4)
+    num = BigInt('0x' + underBits) - mod
+  } else {
+    num = BigInt(num)
   }
 
   decode.bytes = offset - startIndex
-  return BigInt(num)
+  return num
 }
 
 function encodingLength (bits) {

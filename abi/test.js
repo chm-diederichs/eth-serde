@@ -1,5 +1,6 @@
 const crypto = require('crypto')
 const tape = require('tape')
+const func = require('./func-selector')
 const parse = require('./parse')
 const serde = require('./')
 const array = require('./array')
@@ -295,10 +296,19 @@ tape('library functions: array', function (t) {
 })
 
 tape('tuple encoding', function (t) {
-  for (let vector of vectors) {
-    var args = vector.args.map(parseJsonBuffer)
-    // console.log(args)
-    t.same(serde.encode(args, vector.signature), Buffer.from(vector.enc, 'hex'))
+  vectors.forEach(v => v.args = v.args.map(parseJsonBuffer))
+
+  for (let v of vectors) {
+    var prebuf = Buffer.alloc(4 + serde.encodingLength(v.signature, v.args))
+    var offset = prebuf.slice()
+    offset.set(Buffer.from(v.enc, 'hex'), 4)
+
+    t.same(serde.encode(v.signature, v.args), Buffer.from(v.enc, 'hex'))
+    t.same(serde.decode(v.signature, Buffer.from(v.enc, 'hex')), v.args)
+    
+    serde.encode(v.signature, v.args, prebuf, 4)
+    t.same(prebuf.subarray(4).toString('hex'), v.enc)
+    t.same(serde.decode(v.signature, offset, 4), v.args)
   }
 
   t.end()
@@ -306,6 +316,8 @@ tape('tuple encoding', function (t) {
   function parseJsonBuffer (arg) {
     if (arg.type === 'Buffer') {
       return Buffer.from(arg.data)
+    } else if (typeof arg === 'number') {
+      return BigInt(arg)
     } else if (arg instanceof Array) {
       return arg.map(parseJsonBuffer)
     } else {
@@ -314,17 +326,7 @@ tape('tuple encoding', function (t) {
   }
 })
 
-
-// var sig = ['uint256[]', 'uint256', 'bytes4[2]', 'bytes4', 'uint256']
-// var data = [[0x217827138920938901290abcdefeded17291, 3029933439840834n], 3333408308450n, [Buffer.alloc(4), Buffer.alloc(4, 1)], Buffer.alloc(4, 2), 12723454937939n]
-
-// var enc = serde.encode(data, sig)
-// console.log(enc.subarray(0,32))
-// var dec = serde.decode(sig, enc)
-// console.log(dec)
-
-
-// var test = uint.encode(0x30404, 256)
-// console.log(test)
-// var testd = uint.decode(test)
-// console.log(testd)
+tape('function selector', function (t) {
+  console.log(func('baz', ['uint32', 'bool']))
+  t.end()
+})
