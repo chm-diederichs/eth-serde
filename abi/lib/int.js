@@ -96,9 +96,10 @@ function decode (bits, buf, offset) {
   }
 
   decode.bytes = offset - startIndex
-  return num
+  return BigInt(num)
 }
 
 function encodingLength (bits) {
+  if (typeof bits === 'bigint') bits = Number(bits)
   return Math.ceil(bits / 256) * 32
 }

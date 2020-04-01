@@ -72,6 +72,7 @@ function decode (bits, buf, offset) {
 }
 
 function encodingLength (bits) {
+  if (typeof bits === 'bigint') bits = Number(bits)
   return Math.ceil(bits / 256) * 32
 }
 

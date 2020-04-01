@@ -113,7 +113,8 @@ function encodingLength (signature, args) {
       if (item.array) {
         len += array.encodingLength(args[i], item)
       } else {
-        len += serde[item.type].encodingLength(args[i], ...item.opts)
+        // static length does not depend on value
+        len += serde[item.type].encodingLength(...item.opts)
       }
     } else {
       // include reference to tail index
@@ -122,7 +123,7 @@ function encodingLength (signature, args) {
       if (item.array) {
         len += array.encodingLength(args[i], item)
       } else {
-        len += serde[item.type].encodingLength(args[i], ...item.opts)
+        len += serde[item.type].encodingLength(args[i])
       }
     }
   }

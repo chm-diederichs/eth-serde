@@ -325,8 +325,3 @@ tape('tuple encoding', function (t) {
     }
   }
 })
-
-tape('function selector', function (t) {
-  console.log(func('baz', ['uint32', 'bool']))
-  t.end()
-})
