@@ -8,6 +8,10 @@
   },
   "author": "Christophe Diederichs",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chm-diederichs/eth-serde.git"
+  },
   "dependencies": {
     "nanoassert": "^2.0.0",
     "sha3-wasm": "0.0.5"
