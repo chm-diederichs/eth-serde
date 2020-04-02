@@ -4,7 +4,7 @@
   "description": "serialisation for ethereum formats",
   "main": "index.js",
   "scripts": {
-    "test": "node abi/test"
+    "test": "node abi/lib/test"
   },
   "author": "Christophe Diederichs",
   "license": "ISC",

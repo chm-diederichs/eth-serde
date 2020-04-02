@@ -3,8 +3,7 @@ const abi = require('./lib')
 const keccak = require('sha3-wasm').keccak256
 
 module.exports = {
-  raw: abi.serde,
-  pack: abi.pack,
+  raw: abi,
   encodeConstructor,
   encodeMethod,
   encodeEvent: encodeMethod,
