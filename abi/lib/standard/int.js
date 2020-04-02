@@ -86,15 +86,10 @@ function decode (bits, buf, offset) {
   var numBuf = buf.subarray(offset, offset + padLen)
   offset += padLen
 
-  var num = '0x' + numBuf.toString('hex')
+  var num = BigInt('0x' + numBuf.subarray(padLen - bits / 8).toString('hex'))
 
   // handle negative
-  if (num.charCodeAt(2) > 55) {
-    var underBits = num.substring(num.length - bits / 4)
-    num = BigInt('0x' + underBits) - mod
-  } else {
-    num = BigInt(num)
-  }
+  if (num > mod / 2n) num -= mod
 
   decode.bytes = offset - startIndex
   return BigInt(num)

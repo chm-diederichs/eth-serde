@@ -29,7 +29,7 @@ function decode (buf, offset) {
   offset += 20
 
   decode.bytes = offset - startIndex
-  return '0x' + address.toString(16).padStart(40, 0)
+  return '0x' + address.toString('hex').padStart(40, 0)
 }
 
 function encodingLength (address) {

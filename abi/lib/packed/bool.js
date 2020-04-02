@@ -22,6 +22,7 @@ function encode (bool, buf, offset) {
 }
 
 function decode (buf, offset) {
+  console.log(offset)
   if (!offset) offset = 0
   var startIndex = offset
 

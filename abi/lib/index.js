@@ -152,7 +152,6 @@ function pack (signature, args, buf, offset) {
       offset += packed.array.encode.bytes
     } else {
       var encoder = packed[item.type].encode
-      console.log(args[i])
       encoder(args[i], ...item.opts, buf, offset)
       offset += encoder.bytes
     }
@@ -165,16 +164,31 @@ function pack (signature, args, buf, offset) {
 function unpack (signature, buf, offset) {
   if (!offset) offset = 0
   var startIndex = offset
+
+  const staticTypes = [
+    'int',
+    'uint',
+    'address',
+    'bool',
+  ]
   
   var data = []
   var struct = parse(signature).args
 
-  struct.reduce((cnt, item) => {
-    if (!item.static) cnt++
-    assert(cnt < 2, 'multiple dynamic types present, cannot decode.')
-  })
+  var check = struct.reduce((acc, item) => item.static ? acc : acc + 1, 0)
+  assert(check < 2, 'multiple dynamic types present, unable to unpack.')
 
-  for (let item of struct) {
+  for (let i = 0; i < struct.length; i++) {
+    var item = struct[i]
+
+    // unless fixed length, array must be last item
+    assert(!item.array || item.arrayLength > 0 || i === struct.length - 1,
+      'packing is ambiguous, unable to unpack')
+    
+    // array of dynamic types cannot be decoded
+    assert(!item.array || item.static || staticTypes.includes(item.type),
+      'packing is ambiguous, unable to unpack')
+
     var decoder = packed[item.type].decode
     if (item.array) {
       data.push(packed.array.decode(item, buf, offset))

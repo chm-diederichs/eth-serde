@@ -14,7 +14,7 @@ function encode (num, bits, buf, offset) {
   if (!offset) offset = 0
   var startIndex = offset
 
-  var mod = 2n ** BigIint(bits)
+  var mod = 2n ** BigInt(bits)
   
   if (typeof num === 'number' || typeof num === 'bigint') {
     if (typeof num === 'bigint') {
@@ -28,7 +28,7 @@ function encode (num, bits, buf, offset) {
       assert(num < 2 ** bits / 2 && num >= 2 ** bits / -2,
         'value outside of range for signed int')
 
-      if (num < 0) num = max + BigInt(num)
+      if (num < 0) num = mod + BigInt(num)
     }
     num = '0x' + num.toString(16)
   }
@@ -82,13 +82,14 @@ function decode (bits, buf, offset) {
   var num = BigInt('0x' + numBuf.toString('hex'))
 
   // handle negative
-  if (num.charCodeAt(2) > 55) num = num - mod
+  if (num > mod / 2n) num -= mod
 
   decode.bytes = offset - startIndex
   return num
 }
 
 function encodingLength (num, bits) {
+  if (bits === undefined) return encodingLength(null, num)
   if (typeof bits === 'bigint') bits = Number(bits)
   return bits / 8
 }

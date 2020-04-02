@@ -51,7 +51,6 @@ function encode (num, bits, buf, offset) {
     offset += padLen
   }
 
-  console.log(padLen)
   encode.bytes = offset - startIndex
   return buf
 }
@@ -64,8 +63,7 @@ function decode (bits, buf, offset) {
   var padLen = encodingLength(bits)
   
   var start = offset + padLen - bits / 8
-
-  var num = BigInt('0x' + buf.subarray(start, offset + padLen).toString('hex'))
+  var num = BigInt('0x' + buf.subarray(offset, offset + padLen).toString('hex'))
   offset += padLen
 
   decode.bytes = offset - startIndex
@@ -73,6 +71,7 @@ function decode (bits, buf, offset) {
 }
 
 function encodingLength (num, bits) {
+  if (bits === undefined) return encodingLength(null, num)
   if (typeof bits === 'bigint') bits = Number(bits)
   return bits / 8
 }

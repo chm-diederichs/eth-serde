@@ -15,6 +15,7 @@ module.exports = {
 }
 
 function encode (arr, enc, buf, offset) {
+  if (!enc.opts) enc.opts = []
   if (!buf) buf = Buffer.alloc(encodingLength(arr, enc))
   if (!offset) offset = 0
   var startIndex = offset
@@ -29,7 +30,10 @@ function encode (arr, enc, buf, offset) {
 }
 
 function decode (enc, buf, offset) {
-  if (!offset) offset = 0
+  assert(enc.type !== 'string' && (enc.type !== 'bytes' || enc.opts.length),
+    'ambiguous encoding, unable to decode an array of dynamic types')
+  
+ if (!offset) offset = 0
   var startIndex = offset
   
   var len = enc.arrayLength
@@ -56,7 +60,7 @@ function decode (enc, buf, offset) {
 function encodingLength (arr, enc) {
   var len = 0
   for (let item of arr) {
-    len += pack[enc.type].encodingLength(...enc.opts, item)
+    len += pack[enc.type].encodingLength(item, ...enc.opts)
   }
 
   return len
