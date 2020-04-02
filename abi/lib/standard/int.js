@@ -52,7 +52,7 @@ function encode (num, bits, buf, offset) {
     var byteLen = Math.ceil(num.length / 2)
     assert(byteLen * 8 <= bits, "num must be at most 'bits' long")
 
-    var padLen = encodingLength(num, bits)
+    var padLen = encodingLength(bits)
     var end = offset + padLen
     var start = end - byteLen
 
