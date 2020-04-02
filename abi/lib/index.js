@@ -181,10 +181,14 @@ function unpack (signature, buf, offset) {
   for (let i = 0; i < struct.length; i++) {
     var item = struct[i]
 
+    // dynamic item must be last
+    assert(staticTypes.includes(item.type) || item.static || i === struct.length - 1,
+      'packing is ambiguous, unable to unpack')
+
     // unless fixed length, array must be last item
     assert(!item.array || item.arrayLength > 0 || i === struct.length - 1,
       'packing is ambiguous, unable to unpack')
-    
+
     // array of dynamic types cannot be decoded
     assert(!item.array || item.static || staticTypes.includes(item.type),
       'packing is ambiguous, unable to unpack')

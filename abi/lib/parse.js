@@ -88,6 +88,8 @@ function parseArgument (arg, head, tai) {
 }
 
 function staticCheck (item) {
+  if (item.arrayLength < 0) return false
+
   if (item instanceof Array) {
     return item.reduce((acc, i) => acc && staticCheck(i), true)
   }

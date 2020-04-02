@@ -9,12 +9,12 @@ module.exports = {
   encodeEvent: encodeMethod,
   encodeLocal,
   encodeMethodExternal,
-  encodeMethodType
+  encodeMethodType,
   methodID
 }
 
 function encodeConstructor (bytecode, signature, args) {
-  var buf = Buffer.alloc(bytecode.byteLength + encodingLength(signature, args))
+  var buf = Buffer.alloc(bytecode.byteLength + abi.encodingLength(signature, args))
   var offset = 0
 
   buf.set(bytecode)
@@ -23,7 +23,7 @@ function encodeConstructor (bytecode, signature, args) {
 }
 
 function encodeMethod (name, signature, args) {
-  var buf = Buffer.alloc(4 + encodingLength(signature, args))
+  var buf = Buffer.alloc(4 + abi.encodingLength(signature, args))
 
   buf.set(methodID(name, signature))
 
