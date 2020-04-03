@@ -1,6 +1,6 @@
 {
   "name": "eth-serde",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "serialisation for ethereum formats",
   "main": "index.js",
   "scripts": {
