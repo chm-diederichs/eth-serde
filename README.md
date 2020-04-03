@@ -3,20 +3,20 @@
 ## Usage
 
 ```js
-const serde = require('eth-serde')
+const { abi, rlp } = require('eth-serde')
 
 var func = 'test'
 var signature = ['string', 'bytes4[]']
 var bufs = [Buffer.from(', wo'), Buffer.from('rld!')]
 var args = ['hello', bufs]
 
-serde.abi.encodeMethod(func, signature, args)
+abi.encodeMethod(func, signature, args)
 // <Buffer bf 2a 22 5a 00 00 ... 222 more bytes>
 
-serde.abi.raw.pack(signature, args)
+abi.raw.pack(signature, args)
 // <Buffer 68 65 6c 6c 6f 2c 20 77 6f 72 6c 64 21>
 
-serde.rlp.encode(bufs)
+rlp.encode(bufs)
 // <Buffer ca 84 2c 20 77 6f 84 72 6c 64 21>
 
 ```
@@ -27,42 +27,36 @@ serde.rlp.encode(bufs)
 
 Compound methods.
 
-#### `serde.encodeConstructor(bytecode, signature, args)`
+#### `abi.encodeConstructor(bytecode, signature, args)`
 
-#### `serde.encodeMethod(name, signature, args)`
+#### `abi.encodeMethod(name, signature, args)`
 
-#### `serde.encodeLocal(contractAddress, method)`
+#### `abi.decodeOutput(signature, data)`
 
-#### `serde.encodeMethodExternal(contractAddress, contract, method, signature)`
-
-#### `serde.encodeMethodType(contractAddress, codehash, method, signature)`
-
-#### `serde.decodeOutput(signature, data)`
-
-#### `serde.methodID(name, signature)`
+#### `abi.methodID(name, signature)`
 
 ### ABI Encoding
 
 Raw ABI encoding.
 
-#### `serde.raw.encode (signature, args, [buf, offset])`
+#### `abi.raw.encode (signature, args, [buf, offset])`
 
-#### `serde.raw.decode (signature, [buf, offset])`
+#### `abi.raw.decode (signature, [buf, offset])`
 
-#### `serde.raw.encodingLength (signature, args)`
+#### `abi.raw.encodingLength (signature, args)`
 
-#### `serde.raw.pack (signature, args, [buf, offset])`
+#### `abi.raw.pack (signature, args, [buf, offset])`
 
-#### `serde.raw.unpack (signature, [buf, offset])`
+#### `abi.raw.unpack (signature, [buf, offset])`
 
-#### `serde.raw.packLength (signature, args)`
+#### `abi.raw.packLength (signature, args)`
 
 ### RLP Encoding
 
 Recursive length prefix encoding.
 
-### `serde.rlp.encode(item, [buf, offset])`
+### `rlp.encode(item, [buf, offset])`
 
-### `serde.rlp.encode(buf, [offset])`
+### `rlp.encode(buf, [offset])`
 
-### `serde.rlp.encodingLength(item)`
+### `rlp.encodingLength(item)`
