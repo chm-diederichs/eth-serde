@@ -7,6 +7,7 @@ module.exports = {
   encodeConstructor,
   encodeMethod,
   encodeEvent: encodeMethod,
+  decodeOutput,
   methodID
 }
 
