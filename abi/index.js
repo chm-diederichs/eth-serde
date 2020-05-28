@@ -43,7 +43,7 @@ function decodeOutput (signature, data) {
     }
   }
 
-  const result = abi.decode(signature, data)
+  return abi.decode(signature, data)
 }
 
 function methodID (name, signature) {
