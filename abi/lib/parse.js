@@ -84,6 +84,11 @@ function parseArgument (arg, head, tai) {
   }
 
   ret.static = staticCheck(ret)
+  ret.typeStatic = staticCheck({
+    type: ret.type,
+    opts: ret.opts
+  })
+
   return ret
 }
 

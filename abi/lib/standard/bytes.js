@@ -8,6 +8,7 @@ module.exports = {
 }
 
 function encode (bytes, len, buf, offset) {
+  if (typeof bytes === 'string') return encode(format(bytes), len, buf, offset)
   if (len instanceof Uint8Array) return encode(bytes, -1, len, buf)
   assert(bytes.byteLength > 0 && len !== 0, 'cannot encode zero-length buffer')
   if (!len) len = -1
@@ -52,11 +53,24 @@ function decode (len, buf, offset) {
   return bytes.subarray(0, len)
 }
 
-function encodingLength (bytes) {
+function paddedLength (byteLength) {
+  return Math.ceil(byteLength / 32) * 32
+}
+
+function encodingLength (bytes, length) {
+  if (length > 0) return length
+  if (!(bytes instanceof Uint8Array)) return encodingLength(format(bytes), length)
   if (typeof bytes === 'number') return paddedLength(bytes)
   return 32 + paddedLength(bytes.byteLength)
 }
 
-function paddedLength (byteLength) {
-  return Math.ceil(byteLength / 32) * 32
+function format (bytes) {
+  if (bytes instanceof Uint8Array) return bytes
+  if (typeof bytes === 'string') {
+    assert(bytes[1] === 'x', "hex string must be '0x' prefixed")
+    return Buffer.from(bytes.substring(2), 'hex')
+  }
+
+  console.log(bytes)
+  assert(false, 'unexpected type: expected byte array or hex string')
 }

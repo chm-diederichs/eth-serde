@@ -23,7 +23,6 @@ function encode (signature, args, buf, offset) {
   // head
   for (let i = 0; i < struct.length; i++) {
     var item = struct[i]
-
     if (item.static) {
       if (item.array) {
         assert(args[i] instanceof Array &&

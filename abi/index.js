@@ -25,7 +25,7 @@ function encodeMethod (name, signature, args) {
 
   buf.set(methodID(name, signature))
 
-  return abi.encode(signature, args, buf, 4)
+  return  abi.encode(signature, args, buf, 4)
 }
 
 function decodeOutput (signature, data) {

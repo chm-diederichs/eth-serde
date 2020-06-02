@@ -24,7 +24,17 @@ function encode (arr, enc, buf, offset) {
     offset += serde.uint.encode.bytes
   }
 
-  for (let item of arr) {
+  const dynamic = []
+
+  const head = offset
+  if (!enc.typeStatic) offset += 32 * arr.length
+
+  for (let i = 0; i < arr.length; i++) {
+    var item = arr[i]
+
+    var tail = offset - head
+    serde.uint.encode(tail, buf, head + 32 * i)
+
     serde[enc.type].encode(item, ...enc.opts, buf, offset)
     offset += serde[enc.type].encode.bytes
   }
@@ -43,6 +53,8 @@ function decode (enc, buf, offset) {
     offset += serde.uint.decode.bytes
   }
 
+  if (!enc.typeStatic) offset += serde.uint.encodingLength(256)
+
   var arr = []
   for (let i = 0; i < len; i++) {
     var item = serde[enc.type].decode(...enc.opts, buf, offset)
@@ -58,9 +70,10 @@ function encodingLength (arr, enc) {
   var len = 0
 
   if (enc.arrayLength < 0) len += serde.uint.encodingLength(256)
+  if (!enc.typeStatic) len += serde.uint.encodingLength(256) * arr.length
 
   for (let item of arr) {
-    len += serde[enc.type].encodingLength(...enc.opts, item)
+    len += serde[enc.type].encodingLength(item, ...enc.opts)
   }
 
   return len
