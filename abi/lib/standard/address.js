@@ -11,7 +11,7 @@ function encode (address, buf, offset) {
   if (!buf) buf = Buffer.alloc(encodingLength(address))
   if (!offset) offset = 0
   var startIndex = offset
-  
+
   assert(typeof address === 'string' && address.substring(0, 2) === '0x'
     && address.length <= 42, "address must be passed as a prefixed hex string <= 20 bytes long")
 

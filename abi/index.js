@@ -6,6 +6,7 @@ module.exports = {
   raw: abi,
   encodeConstructor,
   encodeMethod,
+  decodeMethod,
   encodeEvent: encodeMethod,
   decodeOutput,
   methodID
@@ -13,10 +14,9 @@ module.exports = {
 
 function encodeConstructor (bytecode, signature, args) {
   var buf = Buffer.alloc(bytecode.byteLength + abi.encodingLength(signature, args))
-  var offset = 0
 
   buf.set(bytecode)
-  
+
   return abi.encode(signature, args, buf, bytecode.byteLength)
 }
 
@@ -25,13 +25,23 @@ function encodeMethod (name, signature, args) {
 
   buf.set(methodID(name, signature))
 
-  return  abi.encode(signature, args, buf, 4)
+  return abi.encode(signature, args, buf, 4)
+}
+
+function decodeMethod (signature, buf) {
+  const methodId = abi.unpack(['bytes4'], buf)
+  const data = abi.decode(signature, buf, 4)
+
+  return {
+    methodId,
+    data
+  }
 }
 
 function decodeOutput (signature, data) {
   const addrIdx = []
   const addrListIdx = []
-  
+
   if (data[1] === 'x') data = Buffer.from(data.slice(2), 'hex')
   for (var i = 0; i < signature.length; i++) {
     if (signature[i] === 'address') {

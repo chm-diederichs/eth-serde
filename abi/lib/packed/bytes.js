@@ -40,8 +40,8 @@ function decode (len, buf, offset) {
 
 function encodingLength (bytes, length) {
   if (length > 0) return length
-  if (!(bytes instanceof Uint8Array)) return encodingLength(format(bytes), length)
   if (typeof bytes === 'number') return bytes
+  if (!(bytes instanceof Uint8Array)) return encodingLength(format(bytes), length)
   return bytes.byteLength
 }
 

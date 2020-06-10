@@ -59,8 +59,8 @@ function paddedLength (byteLength) {
 
 function encodingLength (bytes, length) {
   if (length > 0) return length
-  if (!(bytes instanceof Uint8Array)) return encodingLength(format(bytes), length)
   if (typeof bytes === 'number') return paddedLength(bytes)
+  if (!(bytes instanceof Uint8Array)) return encodingLength(format(bytes), length)
   return 32 + paddedLength(bytes.byteLength)
 }
 
