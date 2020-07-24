@@ -9,7 +9,8 @@ module.exports = {
   decodeMethod,
   encodeEvent: encodeMethod,
   decodeOutput,
-  methodID
+  methodID,
+  eventID
 }
 
 function encodeConstructor (bytecode, signature, args) {
@@ -56,9 +57,13 @@ function decodeOutput (signature, data) {
   return abi.decode(signature, data)
 }
 
-function methodID (name, signature) {
+function eventID (name, signature) {
   if (name instanceof Uint8Array) name = name.toString()
   var toHash = name + '(' + signature.join(',') + ')'
   const hash = keccak().update(toHash).digest()
-  return hash.slice(0, 4)
+  return hash
+}
+
+function methodID (name, signature) {
+  return eventID(name, signature).slice(0, 4)
 }
